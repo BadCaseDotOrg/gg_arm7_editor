@@ -1,10 +1,13 @@
--------------------------
----HEX to ARM Convertor
----Start
--------------------------
 -------------------------------------------------
--- Block of added decoding functions start
+-- HEX to ARM Convertor
+-- Start
 -------------------------------------------------
+
+-------------------------------------------------
+-- Instruction parts decoding functions
+-- Start
+-------------------------------------------------
+
 -- function by CmP
 -- Parses register and returns it's number
 -- bits - a string of 4 bits that represents register number
@@ -21,6 +24,7 @@ local function parse_register( bits )
     
     return tonumber( bits, 2 )
 end
+
 -- function by CmP
 -- Parses constant and returns it's numeric value
 -- bits - a string of 12 bits that represents constant
@@ -39,6 +43,7 @@ local function parse_constant( bits )
     local rotate = tonumber( bits:sub( 1, 4 ), 2 )
     return bit32.rrotate( imm, rotate * 2 )
 end
+
 -- function by CmP
 -- Parses register list and returns array of register numbers
 -- bits - a string of 16 bits that represents register list
@@ -78,7 +83,8 @@ local function register_list_to_string( reg_list )
 end
 
 -------------------------------------------------
--- Block of added decoding functions end
+-- Instruction parts decoding functions
+-- End
 -------------------------------------------------
 
 function hex_num( v )
@@ -241,9 +247,10 @@ function return_opcode( opcode_type, reg_one, reg_two, reg_three )
 end
 
 -------------------------------------------------
--- Block of instruction decoding functions
+-- Instruction decoding functions
 -- Start
 -------------------------------------------------
+
 function decode_bxlr( binary_string )
     local opcode_type = 'BX LR'	
     return opcode_type
@@ -615,19 +622,19 @@ function decode_cmp( binary_string )
 end
 
 -------------------------------------------------
--- Block of instruction decoding functions
--- Start
+-- Instruction decoding functions
+-- End
 -------------------------------------------------
 
+-------------------------------------------------
+-- HEX to ARM Convertor
+-- End
+-------------------------------------------------
 
--------------------------
----HEX to ARM Convertor
----End
--------------------------
--------------------------
----ARM to HEX Convertor
----Start
--------------------------
+-------------------------------------------------
+-- ARM to HEX Convertor
+-- Start
+-------------------------------------------------
 
 function get_opcode_binary_string( opcode, reg1, reg2, reg3 )
     local current_binary_string = ''
@@ -852,14 +859,15 @@ function check_if_reg_3_required( opcode )
     return required
 end
 
--------------------------
----ARM to HEX Convertor
----End
--------------------------
--------------------------
----HEX to ARM GUI
----Start
--------------------------
+-------------------------------------------------
+-- ARM to HEX Convertor
+-- End
+-------------------------------------------------
+
+-------------------------------------------------
+-- HEX to ARM GUI
+-- Start
+-------------------------------------------------
 
 function build_menu( base_address, base_offset, next_page )
     local lib_offset = tonumber( '0x'..base_address )	
@@ -927,15 +935,15 @@ function editor_choice( k, base_address )
     end
 end
 
--------------------------
----HEX to ARM GUI
+-------------------------------------------------
+-- HEX to ARM GUI
+-- End
+-------------------------------------------------
 
----End
--------------------------
--------------------------
----ARM to HEX GUI
----Start
--------------------------
+-------------------------------------------------
+-- ARM to HEX GUI
+-- Start
+-------------------------------------------------
 
 function edit_or_display( new_hex_opcode, address )
     if type( address ) == 'number' then
@@ -1099,10 +1107,10 @@ function edit_opcode_menu(address)
     end
 end
 
--------------------------
----ARM to HEX GUI
----End
--------------------------
+-------------------------------------------------
+-- ARM to HEX GUI
+-- End
+-------------------------------------------------
 
 function memory_editor()
 
