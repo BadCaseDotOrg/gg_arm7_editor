@@ -21,7 +21,7 @@ local function parse_register( bits )
     if bits:match( '[^01]' ) then
         error( 'Argument is not a binary string' )
     end
-    
+
     return tonumber( bits, 2 )
 end
 
@@ -38,7 +38,7 @@ local function parse_constant( bits )
     if bits:match( '[^01]' ) then
         error( 'Argument is not a binary string' )
     end
-    
+
     local imm = tonumber( bits:sub( 5, 12 ), 2 )
     local rotate = tonumber( bits:sub( 1, 4 ), 2 )
     return bit32.rrotate( imm, rotate * 2 )
@@ -57,7 +57,7 @@ local function parse_register_list( bits )
     if bits:match( '[^01]' ) then
         error( 'Argument is not a binary string' )
     end
-        
+
     local reg_num_list = {}
     for i = #bits, 1, -1 do
         if bits:sub( i, i ) == '1' then
@@ -70,7 +70,7 @@ end
 local function register_list_to_string( reg_list )
     local str = ''
     local reg_list_size = #reg_list
-    
+
     if reg_list_size == 0 then
         return '{}'
     end	
@@ -107,22 +107,22 @@ function dword_to_binary( dword )
     if dword == 0 then
         return '00000000000000000000000000000000'
     else
-    local n = '0x'..toHexString( dword )
-    local binary_string = ''
-    local t, d = {}, 0
-    local d = math.log( n )/math.log( 2 ) -- binary logarithm
-    
-    for i=math.floor( d+1 ),0,-1 do
-        t[#t+1] = math.floor( n / 2^i )
-        n = n % 2^i
-    end
-    for i, v in pairs( t ) do
-        if i > 1 then
-        binary_string = binary_string..string.sub( v, 0, -3 )
+        local n = '0x'..toHexString( dword )
+        local binary_string = ''
+        local t, d = {}, 0
+        local d = math.log( n )/math.log( 2 ) -- binary logarithm
+
+        for i=math.floor( d+1 ),0,-1 do
+            t[#t+1] = math.floor( n / 2^i )
+            n = n % 2^i
         end
-    end
+        for i, v in pairs( t ) do
+            if i > 1 then
+                binary_string = binary_string..string.sub( v, 0, -3 )
+            end
+        end
         binary_string = string.format( "%032s", binary_string )
-    return binary_string
+        return binary_string
     end
 end
 
@@ -204,16 +204,16 @@ function arm_convertor( dword_or_hex )
     elseif search_binary( '111000.11010....................', current_binary ) then
         return decode_mov( current_binary )
     else
-      local bit1to4 = current_binary:sub( 1, 4 )
-      local bit5to8 = current_binary:sub( 5, 8 )
-      local bit9to12 = current_binary:sub( 9, 12 )
-      local bit13to16 = current_binary:sub( 13, 16 )
-      local bit17to20 = current_binary:sub( 17, 20 )
-      local bit21to24 = current_binary:sub( 21, 24 )
-      local bit25to28 = current_binary:sub( 25, 28 )
-      local bit29to32 = current_binary:sub( 29, 32 )
-      return '❓ '..bit1to4..bit5to8..' | '..bit9to12..' | '..bit13to16..' | '..bit17to20..' | '..bit21to24..' | '..bit25to28..' | '..bit29to32..' ❓'
-      --return 'Not Found'
+        local bit1to4 = current_binary:sub( 1, 4 )
+        local bit5to8 = current_binary:sub( 5, 8 )
+        local bit9to12 = current_binary:sub( 9, 12 )
+        local bit13to16 = current_binary:sub( 13, 16 )
+        local bit17to20 = current_binary:sub( 17, 20 )
+        local bit21to24 = current_binary:sub( 21, 24 )
+        local bit25to28 = current_binary:sub( 25, 28 )
+        local bit29to32 = current_binary:sub( 29, 32 )
+        return '❓ '..bit1to4..bit5to8..' | '..bit9to12..' | '..bit13to16..' | '..bit17to20..' | '..bit21to24..' | '..bit25to28..' | '..bit29to32..' ❓'
+        --return 'Not Found'
     end
 end
 
@@ -231,13 +231,13 @@ function return_opcode( opcode_type, reg_one, reg_two, reg_three )
         bracket2 = ''
     end
     local a_count = 0
-        local build_arm_string =  opcode_type
-        if reg_one then
-            build_arm_string =  build_arm_string..' '..reg_one
-        end
-        if reg_two then
-            build_arm_string =  build_arm_string..', '..bracket1..reg_two
-        end
+    local build_arm_string =  opcode_type
+    if reg_one then
+        build_arm_string =  build_arm_string..' '..reg_one
+    end
+    if reg_two then
+        build_arm_string =  build_arm_string..', '..bracket1..reg_two
+    end
     if reg_three then
         build_arm_string = build_arm_string..', '..reg_three..bracket2
     else
@@ -364,7 +364,7 @@ function decode_ldr( binary_string )
     local reg_two = 'R' .. parse_register( binary_string:sub( 13, 16 ) )
     if binary_string:sub( 9, 9 ) == '0' then
         negative = '-'
-        else
+    else
         negative = ''
     end
     if binary_string:sub( 7, 7 ) == '0'  and tonumber( binary_string:sub( 21, 32 ), 2 ) ~= 0 then
@@ -386,7 +386,7 @@ function decode_ldrb( binary_string )
     local reg_two = 'R' .. parse_register( binary_string:sub( 13, 16 ) )
     if binary_string:sub( 9, 9 ) == '0' then
         negative = '-'
-        else
+    else
         negative = ''
     end
     if binary_string:sub( 7, 7 ) == '0' and tonumber( binary_string:sub( 21, 32 ), 2 ) ~= 0 then
@@ -407,7 +407,7 @@ function decode_ldrh( binary_string )
     local reg_two = 'R' .. parse_register( binary_string:sub( 13, 16 ) )
     if binary_string:sub( 9, 9 ) == '0' then
         negative = '-'
-        else
+    else
         negative = ''
     end
     if binary_string:sub( 7, 7 ) == '0'  and tonumber( binary_string:sub( 21, 32 ), 2 ) ~= 0 then
@@ -428,7 +428,7 @@ function decode_strb( binary_string )
     local reg_two = 'R' .. parse_register( binary_string:sub( 13, 16 ) )
     if binary_string:sub( 9, 9 ) == '0' then
         negative = '-'
-        else
+    else
         negative = ''
     end
     if binary_string:sub( 7, 7 ) == '0' then
@@ -447,7 +447,7 @@ function decode_str( binary_string )
     local reg_two = 'R' .. parse_register( binary_string:sub( 13, 16 ) )
     if binary_string:sub( 9, 9 ) == '0' then
         negative = '-'
-        else
+    else
         negative = ''
     end
     if binary_string:sub( 7, 7 ) == '0' then
@@ -641,62 +641,62 @@ function get_opcode_binary_string( opcode, reg1, reg2, reg3 )
     local binary_string_array  =
     {
         ['ADD'] = {
-        ['constant'] = '111000101000reg2reg1last12bits',
-        ['register3'] = '111000001000reg2reg100000000reg3'	
+            ['constant'] = '111000101000reg2reg1last12bits',
+            ['register3'] = '111000001000reg2reg100000000reg3'	
         },
         ['MOV'] = {
-        ['constant'] = '1110001110100000reg1last12bits',
-        ['register'] = '1110000110100000reg100000000reg2'
+            ['constant'] = '1110001110100000reg1last12bits',
+            ['register'] = '1110000110100000reg100000000reg2'
         },
         ['MOVW'] = {
-        ['constant'] = '111000110000hex1reg1hex2hex3hex4',
+            ['constant'] = '111000110000hex1reg1hex2hex3hex4',
         },			
         ['SUB'] = {
-        ['constant'] = '111000100100reg2reg1last12bits',
-        ['register3'] = '111000000100reg2reg100000000reg3'
+            ['constant'] = '111000100100reg2reg1last12bits',
+            ['register3'] = '111000000100reg2reg100000000reg3'
         },			
         ['TST'] = {
-        ['constant'] = '111000110001reg10000last12bits',
-        ['register'] = '111000010001reg1000000000000reg2'
+            ['constant'] = '111000110001reg10000last12bits',
+            ['register'] = '111000010001reg1000000000000reg2'
         },			
         ['CMP'] = {
-        ['constant'] = '111000110101reg10000last12bits',
-        ['register'] = '111000010101reg1000000000000reg2'
+            ['constant'] = '111000110101reg10000last12bits',
+            ['register'] = '111000010101reg1000000000000reg2'
         },			
         ['STR'] = {
-        ['register'] = '111001011000reg2reg1000000000000',
-        ['register3'] = '111001111000reg2reg100000000reg3'
+            ['register'] = '111001011000reg2reg1000000000000',
+            ['register3'] = '111001111000reg2reg100000000reg3'
         },			
         ['STRB'] = {
-        ['register'] = '111001011100reg2reg1000000000000',
-        ['register3'] = '111001111100reg2reg100000000reg3'
+            ['register'] = '111001011100reg2reg1000000000000',
+            ['register3'] = '111001111100reg2reg100000000reg3'
         },			
         ['LDR'] = {
-        ['register'] = '111001011001reg2reg1000000000000',
-        ['register3'] = '111001111001reg2reg100000000reg3'
+            ['register'] = '111001011001reg2reg1000000000000',
+            ['register3'] = '111001111001reg2reg100000000reg3'
         },			
         ['LDRB'] = {
-        ['register'] = '111001011101reg2reg1000000000000',
-        ['register3'] = '111001111101reg2reg100000000reg3'
+            ['register'] = '111001011101reg2reg1000000000000',
+            ['register3'] = '111001111101reg2reg100000000reg3'
         },			
         ['EOR'] = {
-        ['register'] = '111000000010reg1reg100000000reg2',
-        ['register3'] = '111000000010reg2reg100000000reg3'
+            ['register'] = '111000000010reg1reg100000000reg2',
+            ['register3'] = '111000000010reg2reg100000000reg3'
         },			
         ['MOVGT'] = {
-        ['register'] = '1100000110100000reg100000000reg2'
+            ['register'] = '1100000110100000reg100000000reg2'
         },			
         ['MUL'] = {
-        ['register'] = '111000000000reg10000reg31001reg2'
+            ['register'] = '111000000000reg10000reg31001reg2'
         }
     }
     if type(reg3) == 'number' or type(reg2) == 'number' then
         current_binary_string = binary_string_array[opcode]['constant']
     else
         if reg3 == false then
-        current_binary_string = binary_string_array[opcode]['register']
+            current_binary_string = binary_string_array[opcode]['register']
         else
-        current_binary_string = binary_string_array[opcode]['register3']	
+            current_binary_string = binary_string_array[opcode]['register3']	
         end
     end		
     return current_binary_string
@@ -706,7 +706,7 @@ local function number_to_binary_string( num )
     local binary_string = ''
     local t = {}
     local d = math.log( num ) / math.log( 2 ) -- binary logarithm
-    
+
     for i = math.floor( d+1 ), 0, -1 do
         t[#t+1] = math.floor( num / 2^i )
         num = num % 2^i
@@ -724,9 +724,9 @@ local function encode_constant( num )
     local imm_part = 0
     local binary_string = ''
     local str_len = 0
-    
+
     for i = 0, 15 do		
-    imm_part = bit32.lrotate(num, i * 2)
+        imm_part = bit32.lrotate(num, i * 2)
         if imm_part < 256 then
             encoded_number = (i << 8) | imm_part
             binary_string = number_to_binary_string(encoded_number)
@@ -742,23 +742,23 @@ end
 
 function hex_char_to_binary( hex_char )
     if hex_char == '0' then
-    return '0000'
+        return '0000'
     else
-    local n = '0x'..hex_char
-    local binary_string = ''
-    local t, d = {}, 0
-    local d = math.log( n )/math.log( 2 ) -- binary logarithm
-    
-    for i=math.floor( d+1 ),0,-1 do
-        t[#t+1] = math.floor( n / 2^i )
-        n = n % 2^i
-    end
-    for i, v in pairs( t ) do
-        if i > 1 then
-        binary_string = binary_string..string.sub( v, 0, -3 )
+        local n = '0x'..hex_char
+        local binary_string = ''
+        local t, d = {}, 0
+        local d = math.log( n )/math.log( 2 ) -- binary logarithm
+
+        for i=math.floor( d+1 ),0,-1 do
+            t[#t+1] = math.floor( n / 2^i )
+            n = n % 2^i
         end
-    end
-    return binary_string
+        for i, v in pairs( t ) do
+            if i > 1 then
+                binary_string = binary_string..string.sub( v, 0, -3 )
+            end
+        end
+        return binary_string
     end
 end
 
@@ -778,35 +778,35 @@ function opcode_generator( opcode, reg1, reg2, reg3 )
         local no_reg_array = {['NOP']='00F020E3',['BX LR']='1EFF2FE1'}
         reverse_hex = no_reg_array[opcode]
     else
-    local current_binary_string = get_opcode_binary_string( opcode, reg1, reg2, reg3 )
-    
-    current_binary_string = string.gsub( current_binary_string, 'reg1', reg1 )
-    current_binary_string = string.gsub( current_binary_string, 'reg2', reg2 )
-    current_binary_string = string.gsub( current_binary_string, 'reg3', reg3 )		
-    if type( reg2 ) == 'number' or type( reg3 ) == 'number' then
-        if type( reg2 ) == 'number' then
-        number_value = reg2
-        elseif type( reg3 ) == 'number' then
-        number_value = reg3
-        end
-        
-        if opcode == 'MOVW' then
-            literal_number = encode_literal_constant( number_value )
-            current_binary_string = string.gsub( current_binary_string, 'hex1', literal_number[1] )	
-            current_binary_string = string.gsub( current_binary_string, 'hex2', literal_number[2] )	
-            current_binary_string = string.gsub( current_binary_string, 'hex3', literal_number[3] )	
-            current_binary_string = string.gsub( current_binary_string, 'hex4', literal_number[4] )	
-        else
-            if encode_constant(number_value) ~= nil then
-                last12bits = encode_constant( number_value )
-            else
-                return gg.alert( 'ℹ️ Not a valid constant for this OpCode ℹ️' )
+        local current_binary_string = get_opcode_binary_string( opcode, reg1, reg2, reg3 )
+
+        current_binary_string = string.gsub( current_binary_string, 'reg1', reg1 )
+        current_binary_string = string.gsub( current_binary_string, 'reg2', reg2 )
+        current_binary_string = string.gsub( current_binary_string, 'reg3', reg3 )		
+        if type( reg2 ) == 'number' or type( reg3 ) == 'number' then
+            if type( reg2 ) == 'number' then
+                number_value = reg2
+            elseif type( reg3 ) == 'number' then
+                number_value = reg3
             end
-            current_binary_string = string.gsub( current_binary_string, 'last12bits', last12bits )	
-        end
-    end		
-    bin_to_num = tonumber( current_binary_string, 2 )
-    reverse_hex = toHexString( bin_to_num ):gsub( "(..)(..)(..)(..)", "%4%3%2%1" )
+
+            if opcode == 'MOVW' then
+                literal_number = encode_literal_constant( number_value )
+                current_binary_string = string.gsub( current_binary_string, 'hex1', literal_number[1] )	
+                current_binary_string = string.gsub( current_binary_string, 'hex2', literal_number[2] )	
+                current_binary_string = string.gsub( current_binary_string, 'hex3', literal_number[3] )	
+                current_binary_string = string.gsub( current_binary_string, 'hex4', literal_number[4] )	
+            else
+                if encode_constant(number_value) ~= nil then
+                    last12bits = encode_constant( number_value )
+                else
+                    return gg.alert( 'ℹ️ Not a valid constant for this OpCode ℹ️' )
+                end
+                current_binary_string = string.gsub( current_binary_string, 'last12bits', last12bits )	
+            end
+        end		
+        bin_to_num = tonumber( current_binary_string, 2 )
+        reverse_hex = toHexString( bin_to_num ):gsub( "(..)(..)(..)(..)", "%4%3%2%1" )
     end
     return reverse_hex
     --gg.copyText( reverse_hex )
@@ -877,10 +877,10 @@ function build_menu( base_address, base_offset, next_page )
     end
     local fcount = 1
     local offset_count = 0	
-    
+
     menu_array = {}
     arm_array = {}
-    
+
     repeat
         arm_array[fcount] = {}
         arm_array[fcount].address = lib_offset + offset_count
@@ -893,15 +893,15 @@ function build_menu( base_address, base_offset, next_page )
     for i,v in pairs( arm_array ) do
         table.insert( menu_array, toHexString(arm_array[i].address)..' | '..toHexString( arm_array[i].value ):gsub( "(..)(..)(..)(..)", "%4%3%2%1" )..'r | '..arm_convertor(arm_array[i].value) )
     end
-    
+
     table.insert( menu_array, 'Next 100 Values' )
-    
+
     local h = gg.choice( menu_array,nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select ARM Instruction To Edit ℹ️' )
     if h ~= nil then
         if h == 100 then
-        build_menu( base_address, base_offset, arm_array[h - 1].address )			
+            build_menu( base_address, base_offset, arm_array[h - 1].address )			
         else
-        editor_choice( h , arm_array[h].address )
+            editor_choice( h , arm_array[h].address )
         end
     end	
     --print( arm_array )
@@ -910,7 +910,7 @@ end
 function editor_choice( k, base_address )
     local reverse_hex = toHexString( arm_array[k].value ):gsub( "(..)(..)(..)(..)", "%4%3%2%1" )
     local h = gg.choice( { '✏️ Edit ARM7: '..menu_array[k]..' ✏️', '📋 Copy ARM7: '..menu_array[k]..' 📋' , '📋 Copy Reverse Hex: '..reverse_hex..' 📋' , '📋 Copy Binary Data: '..dword_to_binary( arm_array[k].value )..' 📋', '📋 Copy DWORD Value: '..arm_array[k].value..' 📋'}, nil, '📜 ARM7 Editor by BadCase 📜\n\n' )
-    
+
     if h == nil then else	
         if h == 1 then
             edit_opcode_menu(arm_array[k].address)
@@ -985,7 +985,7 @@ function edit_opcode_menu(address)
         progress_bracket_1 = ''
         progress_bracket_2 = ''		
     end
-  
+
     if progress_opcode ~= '' then
         progress_string = progress_opcode
         if progress_reg1 ~= '' then
@@ -994,7 +994,7 @@ function edit_opcode_menu(address)
                 progress_string = progress_string..','..progress_bracket_1..progress_reg2
                 if progress_reg3 ~= '' then
                     progress_string = progress_string..','..progress_reg3..progress_bracket_2
-                    else
+                else
                     progress_string = progress_string..progress_bracket_2
                 end
             end
@@ -1114,51 +1114,52 @@ end
 
 function memory_editor()
 
-local check_results = gg.getResults(gg.getResultsCount())
-local check_saved = gg.getListItems ()
-local results_menu = {}
-local saved_menu = {}
-if check_results[1] then
-    for i,v in ipairs(check_results) do
-        table.insert(results_menu, toHexString(check_results[i].address))
+    local check_results = gg.getResults(gg.getResultsCount())
+    local check_saved = gg.getListItems ()
+    local results_menu = {}
+    local saved_menu = {}
+    if check_results[1] then
+        for i,v in ipairs(check_results) do
+            table.insert(results_menu, toHexString(check_results[i].address))
+        end
     end
-end
-if check_saved[1] then
-    for i,v in ipairs(check_saved) do
-        table.insert(saved_menu, toHexString(check_saved[i].address))
+    if check_saved[1] then
+        for i,v in ipairs(check_saved) do
+            table.insert(saved_menu, toHexString(check_saved[i].address))
+        end
     end
-end
- local h = gg.choice({'🔘 Enter address to go to','🔘 Go to address from search results', '🔘 Go to address from saved list'},nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select or Enter Address ℹ️')
+    local h = gg.choice({'🔘 Enter address to go to','🔘 Go to address from search results', '🔘 Go to address from saved list'},nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select or Enter Address ℹ️')
 
     if h == nil then else	
-     if h == 1 then
-        local h2 = gg.prompt(
-        {'ℹ️ Enter Address ℹ️'},
-        {},
-        {[1]='text'}
-        )
-        if h2 ~= nil then
-            build_menu( h2[1], 0, 0 )
-        else 
-            home()
+        if h == 1 then
+            local h2 = gg.prompt(
+                {'ℹ️ Enter Address ℹ️'},
+                {},
+                {[1]='text'}
+            )
+            if h2 ~= nil then
+                build_menu( h2[1], 0, 0 )
+            else 
+                home()
+            end
         end
-    end
-    if h == 2 then 
-    local h3 = gg.choice(results_menu,nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select or Enter Address ℹ️')
-        if h3 ~= nil then
-            build_menu( results_menu[h3], 0, 0 )
-        else 
-            home()
-        end
+        if h == 2 then 
+            local h3 = gg.choice(results_menu,nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select or Enter Address ℹ️')
+            if h3 ~= nil then
+                build_menu( results_menu[h3], 0, 0 )
+            else 
+                home()
+            end
 
-    end
-    if h == 3 then 
-    local h4 = gg.choice(saved_menu,nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select or Enter Address ℹ️')
-        if h4 ~= nil then
-            build_menu( saved_menu[h4], 0, 0 )
-        else 
-            home()
-        end	end
+        end
+        if h == 3 then 
+            local h4 = gg.choice(saved_menu,nil, '📜 ARM7 Editor by BadCase 📜\n\nℹ️ Select or Enter Address ℹ️')
+            if h4 ~= nil then
+                build_menu( saved_menu[h4], 0, 0 )
+            else 
+                home()
+            end
+        end
     end
 end
 
@@ -1192,16 +1193,16 @@ function donate()
 end
 
 function thanks()
-gg.alert('ℹ️\nThanks to NoFear for getting me started on understanding ARM\n\nThanks to CmP for teaching me about ARM in further detail and for rewriting some inefficient functions in the script.')
+    gg.alert('ℹ️\nThanks to NoFear for getting me started on understanding ARM\n\nThanks to CmP for teaching me about ARM in further detail and for rewriting some inefficient functions in the script.')
 end
 
 function reuse()
-gg.alert('You are free to reuse the core encoding and decoding functions of this script so long as it is not in another ARM editor, (if you wish to contribute functions to the editor contact me and you will be given full credit for your contribution) and so long as you give visible credit to me in the GUI of your script such as in an alert triggered by a button labeled "Credits" or something similar.')
+    gg.alert('You are free to reuse the core encoding and decoding functions of this script so long as it is not in another ARM editor, (if you wish to contribute functions to the editor contact me and you will be given full credit for your contribution) and so long as you give visible credit to me in the GUI of your script such as in an alert triggered by a button labeled "Credits" or something similar.')
 end
 
 function home()
     local h = gg.choice( { "✏️ Memory Editor","🔄 Hex to ARM7 Convertor","🔄 ARM7 to Hex Convertor", '💸 Donate', '🙏 Thanks To', 'ℹ️ Reuse of Script Functions', '❌ Exit'}, nil, '📜 ARM7 Editor by BadCase 📜\n\n' )
-    
+
     if h == nil then else	
         if h == 1 then memory_editor() end
         if h == 2 then hex_to_arm() end
