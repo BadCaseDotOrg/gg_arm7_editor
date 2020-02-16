@@ -370,7 +370,6 @@ function decode_ldr( binary_string )
     if binary_string:sub( 7, 7 ) == '0'  and tonumber( binary_string:sub( 21, 32 ), 2 ) ~= 0 then
         local reg_three = '#' ..negative.. tonumber( binary_string:sub( 21, 32 ), 2 )
         return return_opcode( opcode_type, reg_one, reg_two, reg_three )
-
     elseif binary_string:sub( 7, 7 ) == '1' and binary_string:sub( 25, 28 ) == '0000' then
         local reg_three = 'R' .. parse_register( binary_string:sub( 29, 32 ) )
         return return_opcode( opcode_type, reg_one, reg_two, reg_three )
@@ -1043,8 +1042,6 @@ function edit_opcode_menu(address)
             end		
         end
         if h == 4 then
-
-
             local reg_two_prompt = gg.prompt( { 'ℹ️ Enter Number ℹ️' },{},{ [1]='number' })
             if reg_two_prompt == nil then 
                 goto editing
@@ -1067,8 +1064,6 @@ function edit_opcode_menu(address)
             end		
         end		
         if h == 6 then
-
-
             local reg_three_prompt = gg.prompt( { 'ℹ️ Enter Number ℹ️' },{},{ [1]='number' })
             if reg_three_prompt == nil then 
                 goto editing
@@ -1113,7 +1108,6 @@ end
 -------------------------------------------------
 
 function memory_editor()
-
     local check_results = gg.getResults(gg.getResultsCount())
     local check_saved = gg.getListItems ()
     local results_menu = {}
