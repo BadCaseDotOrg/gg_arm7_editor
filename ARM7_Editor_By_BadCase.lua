@@ -67,19 +67,18 @@ local function parse_register_list( bits )
     return reg_num_list
 end
 
+-- Constructs string representation of register list
+-- reg_list - a table with register indexes
 local function register_list_to_string( reg_list )
-    local str = ''
     local reg_list_size = #reg_list
-
-    if reg_list_size == 0 then
-        return '{}'
-    end	
-    str = '{'
-    for i = 1, reg_list_size - 1 do
-        str = str ..'R'.. reg_list[i] .. ', R'
+    local str = ''
+    for i = 1, reg_list_size do
+        str = str ..'R'.. reg_list[i] .. ', '
     end
-    str = str .. reg_list[reg_list_size] .. '}'	
-    return str
+    if #str > 0 then
+        str = str:sub(1, -3)
+    end
+    return '{' .. str .. '}'
 end
 
 -------------------------------------------------
